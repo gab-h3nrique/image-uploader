@@ -1,6 +1,7 @@
+import Router from 'next/router';
 
 const Home = () => {
-  if(typeof window !== 'undefined') window.location.href = '/app/'
+  if(typeof window !== 'undefined') Router.push('/app')
   return; 
 }
 

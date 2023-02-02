@@ -12,9 +12,9 @@ export interface Props {
 
 const Layout = ({page, children}:Props) => {
     return (
-        <section className="flex">
+        <section className="flex w-screen h-screen">
             <Sidebar selected={page || ''}/>
-            <main className="bg-slate-100">
+            <main className="bg-slate-100 flex w-full h-full p-3">
                 {children}
             </main>
         </section>
