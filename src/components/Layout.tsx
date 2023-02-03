@@ -1,5 +1,6 @@
 /* components */
 
+import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 
 /* components */
@@ -12,12 +13,15 @@ export interface Props {
 
 const Layout = ({page, children}:Props) => {
     return (
-        <section className="flex w-screen h-screen">
-            <Sidebar selected={page || ''}/>
-            <main className="bg-slate-100 flex w-full h-full p-3">
-                {children}
-            </main>
-        </section>
+        <div className="flex flex-col w-screen h-screen bg-slate-100">
+            <Navbar/>
+            <div className="flex h-full w-full">
+                <Sidebar selected={page || ''}/>
+                <main className="flex w-full p-3">
+                    {children}
+                </main>
+            </div>
+        </div>
     )
 }
 export default Layout;
