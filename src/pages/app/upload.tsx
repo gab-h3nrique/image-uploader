@@ -28,17 +28,9 @@ const Upload: NextPage = () => {
 
     return (
         <Layout page='upload'>
-            <section onClick={()=>console.log(image)} className="flex w-full h-full justify-center items-center">
+            <section onClick={()=>console.log(image)} className="flex w-full h-full justify-center items-center ">
 
-                {/* <div className="flex flex-col gap-3">
-                    <input onChange={(e)=> getBaseUrl(e.target.files)} type='file' accept='image/png, image/jpeg, image/jpg' placeholder='selecione uma imagem'/>
-                    {
-                        image && <Image src={image} alt="" width={100} height={100}/>
-                    }
-               
-                </div> */}
-
-                <div className="flex flex-col justify-center items-center gap-2 w-[30rem]">
+                <div className="flex flex-col justify-center items-center gap-2 w-[30rem] overflow-hidden">
 
                     <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-[10rem] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-slate-900 hover:bg-slate-700 duration-150">
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">

@@ -3,10 +3,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^4.9.0",
+    "jose": "^4.9.0",
     "next": "latest",
     "react": "18.2.0",
     "react-dom": "18.2.0"
