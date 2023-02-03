@@ -8,7 +8,8 @@ import Image from 'next/image'
 const Upload: NextPage = () => {
     const [image, setImage] = useState<any>()
     const [imageInfo, setImageInfo] = useState<any>()
-
+    const [loadImage, setLoadImage] = useState<boolean>()
+    
     function getBaseUrl (files:any)  {
 
         setImageInfo(files[0])
