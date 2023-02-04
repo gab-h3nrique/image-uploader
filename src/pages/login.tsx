@@ -21,7 +21,8 @@ const Home: NextPage = () => {
     let data = await Api.auth('/api/login', {email, password});
     console.log(data)
     if(data.accessToken) {
-      Router.push('/app/');
+      // Router.push('/app/');
+      window.location.href = '/app'
     } else {
       setMessage(data.message);
     }
