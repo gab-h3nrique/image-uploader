@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background: transparent !important;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: #373b4e;
+    border-radius: 9999px;
+    border: 1px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+input:focus {outline:none;}
+::-moz-focus-inner {border:0;}

@@ -1,21 +1,19 @@
 // middleware.ts
-// import jwt from 'jsonwebtoken';
-import { NextRequest, NextResponse } from 'next/server';
-import Api from "./lib/api";
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { verify } from './lib/jwtToken';
-// import { Users } from './models/users';
 
 export default async function middleware(req: NextRequest) {
 
     try{
 
-        // if(!await isAuthenticated(req)) return handleNotAuthenticated(req);
+        if(!await isAuthenticated(req)) return handleNotAuthenticated(req)
 
         return NextResponse.next();
         
     } catch(error) {
-        
-        return handleNotAuthenticated(req);
+ 
+        return handleNotAuthenticated(req)
     
     }
     
@@ -26,12 +24,11 @@ export const config = {
     matcher: ['/app/:path*', '/api/auth/:path*'],
 }
 
-async function isAuthenticated(request: NextRequest):Promise<boolean> {
+async function isAuthenticated(req: NextRequest): Promise<boolean> {
 
-    const authorization: any = request.headers.get('authorization') || request.cookies.get('auth') || '';
-    const token = <string>authorization.replace('Bearer ', '');
-
-    if(!token) return false
+    const {value:token} = <any> req.cookies.get('auth')
+    
+    if(!token) return false 
 
     const decodedToken = await verify(token, process.env.ACCESS_TOKEN as string)
 
@@ -39,11 +36,14 @@ async function isAuthenticated(request: NextRequest):Promise<boolean> {
 
 }
 
-function handleNotAuthenticated(request: NextRequest): NextResponse | undefined {
+function handleNotAuthenticated(req: NextRequest) {
 
-    const { pathname } = request.nextUrl
+    const { pathname } = req.nextUrl
 
-    if (pathname.startsWith('/app')) return NextResponse.redirect(new URL('/login', request.url))
-    if (pathname.startsWith('/api')) return NextResponse.redirect(new URL('/api/unauthorized', request.url));
+    console.log('sdfsdf', pathname)
+
+    if (pathname.startsWith('/app')) return NextResponse.redirect(new URL('/login', req.url))
+
+    return NextResponse.json({ success: false,  message: 'Error: Auth failed' }, { status: 401 });
 
 }

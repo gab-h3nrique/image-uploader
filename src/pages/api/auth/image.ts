@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ImageType } from '../../../types/imageType';
 import ImageModel from '../../../models/ImageModel'
+import { verify } from '../../../lib/jwtToken';
+import { authorizationToken } from '../../../lib/auth';
+import UserModel from '../../../models/UserModel';
 
 // 200 OK
 // 201 Created
@@ -14,6 +17,7 @@ import ImageModel from '../../../models/ImageModel'
 // 401 Unauthorized
 // 402 Payment Required
 // 403 Forbidden
+// 404 Not Found
 // 405 Method Not Allowed
 // 406 Not Acceptable
 // 429 Too Many Requests
@@ -21,6 +25,14 @@ import ImageModel from '../../../models/ImageModel'
 // 501 Not Implemented
 // 502 Bad Gateway
 // 503 Service Unavailable
+
+export const config = {
+    api: {
+        bodyParser: {
+        sizeLimit: '10mb',
+        },
+    },
+}
 
 export default async function handler( req: NextApiRequest, res: NextApiResponse) {
     
@@ -39,14 +51,23 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
         }
         
         if(method === 'POST') {
+            
+            const { image, name } = req.body
 
-            const { image }:ImageType = req.body
-
+            const token = await authorizationToken(req)
+            
+            const decodedToken = await verify(token, process.env.ACCESS_TOKEN as string)
+            
+            if(!decodedToken) return res.status(406).json({ message: 'missing params' })
             if(!image) return res.status(406).json({ message: 'missing params' })
 
-            const imageDb = await ImageModel.create({id:-1, image:image})
+            const userDb :any = await UserModel.get(Number(decodedToken.id))
 
-            return res.status(200).json(imageDb)
+            if(!userDb) return res.status(404).json({ message: 'user not found' })
+
+            const imageDb = await ImageModel.create({image: image, name: name || undefined, userId: userDb.id})
+
+            return res.status(200).json({ image: imageDb})
             
         }
         

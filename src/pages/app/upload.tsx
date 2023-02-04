@@ -5,9 +5,11 @@ import Layout from '../../components/Layout'
 import Image from 'next/image'
 import Api from '../../lib/api'
 
+interface UploadImage {success: boolean, message:string}
 
 const Upload: NextPage = () => {
     const [image, setImage] = useState<any>()
+    const [returnUpload, setReturnUpload] = useState<UploadImage>({success: false, message:''})
     const [imageInfo, setImageInfo] = useState<any>()
     const [loadImage, setLoadImage] = useState<boolean>()
     
@@ -25,12 +27,14 @@ const Upload: NextPage = () => {
 
     }
 
-    async function saveImage() {
-        if(!image) return;
+    async function saveImage(imageParam:any) {
+        if(!imageParam) return;
         
-        const resopnse = await Api.post('/api/auth/image', { image:image })
+        const { message, ...image } = await Api.post('/api/auth/image', { image:imageParam, name: imageInfo.name })
         
-        console.log('resopnse', resopnse)
+        if(message) return setReturnUpload({success:false ,message:message})
+
+        setReturnUpload({success:true , message:''})
 
     }
 
@@ -38,11 +42,14 @@ const Upload: NextPage = () => {
 
     return (
         <Layout page='upload'>
-            <section onClick={()=>console.log(image)} className="flex w-full h-full justify-center items-center ">
+            <section onClick={()=>console.log(returnUpload)} className="flex w-full h-full justify-center items-center ">
 
-                <div className="flex flex-col justify-center items-center gap-2 w-[30rem] overflow-hidden">
+                <div className="flex flex-col justify-center items-center gap-2 w-[30rem]">
 
                     <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-[10rem] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-slate-900 hover:bg-slate-700 duration-150">
+                        
+                    
+                        
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
 
                             {
@@ -78,12 +85,20 @@ const Upload: NextPage = () => {
                         <input id="dropzone-file" type="file" onChange={(e)=> getBaseUrl(e.target.files)} className="hidden" />
                     </label>
 
-                    <button onClick={saveImage} className="flex items-center justify-center p-2 gap-2 w-full rounded-lg bg-slate-900 hover:bg-slate-700 duration-150" >
+                    <button onClick={()=> saveImage(image)} className="flex items-center justify-center p-2 gap-2 w-full rounded-lg bg-slate-900 hover:bg-slate-700 duration-150" >
 
-                        <svg className="fill-white w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path d="M288 109.3V352c0 17.7-14.3 32-32 32s-32-14.3-32-32V109.3l-73.4 73.4c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l128-128c12.5-12.5 32.8-12.5 45.3 0l128 128c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L288 109.3zM64 352H192c0 35.3 28.7 64 64 64s64-28.7 64-64H448c35.3 0 64 28.7 64 64v32c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V416c0-35.3 28.7-64 64-64zM432 456c13.3 0 24-10.7 24-24s-10.7-24-24-24s-24 10.7-24 24s10.7 24 24 24z"/>
-                        </svg>
-                        <p className="text-white font-semibold text-sm whitespace-nowrap">fazer upload</p>
+                        {
+                            !returnUpload.success ?
+                            <svg className="fill-white w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <path d="M288 109.3V352c0 17.7-14.3 32-32 32s-32-14.3-32-32V109.3l-73.4 73.4c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l128-128c12.5-12.5 32.8-12.5 45.3 0l128 128c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L288 109.3zM64 352H192c0 35.3 28.7 64 64 64s64-28.7 64-64H448c35.3 0 64 28.7 64 64v32c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V416c0-35.3 28.7-64 64-64zM432 456c13.3 0 24-10.7 24-24s-10.7-24-24-24s-24 10.7-24 24s10.7 24 24 24z"/>
+                            </svg>
+                            :
+                            <svg className="fill-green-600 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/>
+                            </svg>
+
+                        }
+                        <p className="text-white font-semibold text-sm whitespace-nowrap">{returnUpload.success ? 'Imagem salva!' : returnUpload.message ? returnUpload.message : 'Fazer upload'}</p>
                         
                     </button>
 

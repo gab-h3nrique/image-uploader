@@ -13,7 +13,7 @@ export interface Props {
 
 const Layout = ({page, children}:Props) => {
     return (
-        <div className="flex flex-col w-screen h-screen bg-slate-100">
+        <div className="flex flex-col w-screen h-screen bg-slate-200">
             <Navbar/>
             <div className="flex h-full w-full">
                 <Sidebar selected={page || ''}/>
