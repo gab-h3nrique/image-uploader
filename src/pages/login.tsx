@@ -20,7 +20,7 @@ const Home: NextPage = () => {
     setLoading(true)
     let data = await Api.auth('/api/login', {email, password});
     console.log(data)
-    if(data.accessToken && data.user) {
+    if(data.accessToken) {
       Router.push('/app/');
     } else {
       setMessage(data.message);
