@@ -17,7 +17,7 @@ function model() {
 
     async function get(id?: number) {
         return id ? <ImageType> await prisma.image.findFirst({ where: {id: id}, include: {user: true}}) 
-        : <ImageType[]> await prisma.image.findMany({ include: {user: true} })
+        : <ImageType[]> await prisma.image.findMany({ include: {user: true}, orderBy: { id: 'desc'} })
     }
 
     async function deleteMethod(id: number) {
