@@ -1,6 +1,6 @@
 
 import type { NextPage } from 'next'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Layout from '../../components/Layout'
 import Image from 'next/image'
 import Api from '../../lib/api'
@@ -11,7 +11,7 @@ const Upload: NextPage = () => {
     const [image, setImage] = useState<any>()
     const [returnUpload, setReturnUpload] = useState<UploadImage>({success: false, message:''})
     const [imageInfo, setImageInfo] = useState<any>()
-    const [loadImage, setLoadImage] = useState<boolean>()
+    const [user, setUser] = useState<any>()
     
     function getBaseUrl(files:any)  {
 
@@ -27,6 +27,10 @@ const Upload: NextPage = () => {
 
     }
 
+    async function getUser() {
+        setUser(await Api.get('/api/auth/user'))
+    }
+
     async function saveImage(imageParam:any) {
         if(!imageParam) return;
         
@@ -38,10 +42,12 @@ const Upload: NextPage = () => {
 
     }
 
-    
+    useEffect(()=>{
+        getUser()
+    },[])
 
     return (
-        <Layout page='upload'>
+        <Layout page='upload' user={user}>
             <section onClick={()=>console.log(returnUpload)} className="flex w-full h-full justify-center items-center ">
 
                 <div className="flex flex-col justify-center items-center gap-2 w-[30rem]">

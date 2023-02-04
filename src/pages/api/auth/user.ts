@@ -42,46 +42,20 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
 
         if(method === 'GET') {
 
-            const { id } = req.query
-
-            const imageDb = await ImageModel.get(Number(id))
-
-            return res.status(200).json(imageDb)
-
-        }
-        
-        if(method === 'POST') {
-            
-            const { image, name } = req.body
-
             const token = await authorizationToken(req)
             
             const decodedToken = await verify(token, process.env.ACCESS_TOKEN as string)
             
             if(!decodedToken) return res.status(406).json({ message: 'missing params' })
-            if(!image) return res.status(406).json({ message: 'missing params' })
 
             const userDb :any = await UserModel.get(Number(decodedToken.id))
 
             if(!userDb) return res.status(404).json({ message: 'user not found' })
 
-            const imageDb = await ImageModel.create({image: image, name: name || undefined, userId: userDb.id})
-
-            return res.status(200).json({ image: imageDb})
-            
-        }
-
-        if(method === 'DELETE') {
-
-            const { id } = req.query
-
-            if(!id) return res.status(406).json({ message: 'missing params' })
-
-            const imageDb = await ImageModel.delete(Number(id))
-
-            return res.status(200).json(imageDb)
+            return res.status(200).json(userDb)
 
         }
+        
         
     } catch(error) {
 

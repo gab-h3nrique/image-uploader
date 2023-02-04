@@ -20,8 +20,12 @@ function model() {
         : <ImageType[]> await prisma.image.findMany({ include: {user: true} })
     }
 
+    async function deleteMethod(id: number) {
+        return <ImageType> await prisma.image.delete({ where: {id: id} })
+    }
+
     // export all function that is in the return
-    return { create, get }
+    return { create, get, delete:deleteMethod }
 }
 
 const ImageModel = model()
